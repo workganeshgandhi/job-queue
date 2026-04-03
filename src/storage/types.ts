@@ -213,6 +213,19 @@ export interface Storage {
    */
   releaseLeaderLock? (lockKey: string, ownerId: string): Promise<boolean>
 
+  /**
+   * Set the dedup expiry for a terminal job.
+   * After ttlMs elapses, the job ID can be re-enqueued.
+   */
+  setJobExpiry (id: string, ttlMs: number): Promise<void>
+
+  /**
+   * Create a namespaced view of this storage.
+   * The returned storage shares the same underlying connections (where applicable)
+   * but uses a different key prefix, providing isolated queues on the same backend.
+   */
+  createNamespace (name: string): Storage
+
   // ═══════════════════════════════════════════════════════════════════
   // ATOMIC OPERATIONS (Lua scripts in Redis)
   // ═══════════════════════════════════════════════════════════════════
